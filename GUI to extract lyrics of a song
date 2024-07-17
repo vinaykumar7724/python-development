@@ -1,0 +1,54 @@
+import tkinter as tk
+from tkinter import messagebox, scrolledtext
+import requests
+
+# Function to fetch lyrics
+def fetch_lyrics():
+    song = entry_song.get()
+    artist = entry_artist.get()
+    
+    if not song or not artist:
+        messagebox.showerror("Error", "Both fields are required")
+        return
+    
+    try:
+        url = f"https://api.lyrics.ovh/v1/{artist}/{song}"
+        response = requests.get(url)
+        data = response.json()
+        
+        if 'lyrics' in data:
+            lyrics_display.delete('1.0', tk.END)  # Clear previous lyrics
+            lyrics_display.insert(tk.END, data['lyrics'])
+        else:
+            messagebox.showerror("Error", "Lyrics not found")
+    except Exception as e:
+        messagebox.showerror("Error", f"An error occurred: {e}")
+
+# Create the main window
+root = tk.Tk()
+root.title("Lyrics Extractor")
+root.geometry("500x400")  # Set the window size to 500x400 pixels
+root.configure(bg="lightyellow")  # Set the background color to light yellow
+
+# Create a label and entry for the Song Title
+label_song = tk.Label(root, text="Song Title", bg="lightyellow", font=("Arial", 12))
+label_song.grid(row=0, column=0, padx=10, pady=10, sticky="e")
+entry_song = tk.Entry(root, font=("Arial", 12))
+entry_song.grid(row=0, column=1, padx=10, pady=10, sticky="w")
+
+# Create a label and entry for the Artist
+label_artist = tk.Label(root, text="Artist", bg="lightyellow", font=("Arial", 12))
+label_artist.grid(row=1, column=0, padx=10, pady=10, sticky="e")
+entry_artist = tk.Entry(root, font=("Arial", 12))
+entry_artist.grid(row=1, column=1, padx=10, pady=10, sticky="w")
+
+# Create a button to fetch lyrics
+button_fetch = tk.Button(root, text="Fetch Lyrics", command=fetch_lyrics, bg="white", font=("Arial", 12, "bold"))
+button_fetch.grid(row=2, column=0, columnspan=2, padx=10, pady=20)
+
+# Create a scrolled text widget to display lyrics
+lyrics_display = scrolledtext.ScrolledText(root, wrap=tk.WORD, width=50, height=10, font=("Arial", 12))
+lyrics_display.grid(row=3, column=0, columnspan=2, padx=10, pady=10)
+
+# Run the application
+root.mainloop()

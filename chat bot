@@ -1,0 +1,70 @@
+import nltk
+from nltk.chat.util import Chat, reflections
+
+# Sample conversation pairs
+pairs = [
+    [
+        r"my name is (.*)",
+        ["Hello %1, How are you today?",]
+    ],
+    [
+        r"hi|hey|hello",
+        ["Hello", "Hey there",]
+    ],
+    [
+        r"what is your name ?",
+        ["I am a chatbot created using Python's NLTK library.",]
+    ],
+    [
+        r"how are you ?",
+        ["I'm doing good. How about you?",]
+    ],
+    [
+        r"sorry (.*)",
+        ["It's okay", "No problem",]
+    ],
+    [
+        r"I am (.*) (good|well|okay|ok)",
+        ["Nice to hear that", "Alright, great!",]
+    ],
+    [
+        r"quit",
+        ["Bye, take care.",]
+    ],
+]
+
+# Reflections dictionary for substitutions
+reflections = {
+    "i am": "you are",
+    "i was": "you were",
+    "i": "you",
+    "i'd": "you would",
+    "i've": "you have",
+    "i'll": "you will",
+    "my": "your",
+    "you are": "I am",
+    "you were": "I was",
+    "you've": "I have",
+    "you'll": "I will",
+    "your": "my",
+    "yours": "mine",
+    "you": "me",
+    "me": "you"
+}
+
+# Create chatbot
+chatbot = Chat(pairs, reflections)
+
+# Function to start chat
+def start_chat():
+    print("Hi, I'm your chatbot. Type 'quit' to exit.")
+    while True:
+        user_input = input("You: ")
+        if user_input.lower() == "quit":
+            print("Chatbot: Bye, take care.")
+            break
+        response = chatbot.respond(user_input)
+        print(f"Chatbot: {response}")
+
+# Start chat
+start_chat()
